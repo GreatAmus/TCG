@@ -8,7 +8,7 @@
     $connection = mysqli_connect($SERVER_NAME, $DB_USERNAME, $DB_PASSWORD, $DB);
 
     if (mysqli_connect_errno()) {
-        echo "Connection to database failed."
+        echo "Connection to database failed.";
         exit();
     }
 
@@ -30,5 +30,5 @@
     $createUserQuery = "INSERT INTO users (username, password) VALUES ('" . $username . "', '" . $hashed_password . "');";
     mysqli_query($connection, $createUserQuery) or die ("Create user query failed.");
 
-    echo("succes");
+    echo("success");
 ?>
