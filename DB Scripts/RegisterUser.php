@@ -1,9 +1,5 @@
 <?php
-
-    $SERVER_NAME = "localhost";
-    $DB_USERNAME = "id17730895_southeja";
-    $DB_PASSWORD = "6<>Cf<3&f4vqwAU8";
-    $DB = "id17730895_tcg";
+    require('Config.php');
 
     $connection = mysqli_connect($SERVER_NAME, $DB_USERNAME, $DB_PASSWORD, $DB);
 
@@ -16,7 +12,7 @@
     $username = $_POST["username"];
     $hashed_password = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
-    //Query database to confirm username is not taken
+    //Query database for username
     $checkUsernameQuery = "SELECT username FROM users WHERE username='" . $username . "';";
     $checkUsername = mysqli_query($connection, $checkUsernameQuery) or die("Check username query failed.");
 
@@ -30,5 +26,5 @@
     $createUserQuery = "INSERT INTO users (username, password) VALUES ('" . $username . "', '" . $hashed_password . "');";
     mysqli_query($connection, $createUserQuery) or die ("Create user query failed.");
 
-    echo("success");
+    echo("Success.");
 ?>
