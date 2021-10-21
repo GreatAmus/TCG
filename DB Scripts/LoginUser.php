@@ -13,22 +13,23 @@
     $password = $_POST["password"];
 
     //Query database for username
-    $checkUsernameQuery = "SELECT username, password FROM users WHERE username='" . $username . "';";
+    $checkUsernameQuery = "SELECT userID, password FROM users WHERE username='" . $username . "';";
     $checkUsername = mysqli_query($connection, $checkUsernameQuery) or die("Check username query failed.");
 
     //Make sure username exists in db
     if (mysqli_num_rows($checkUsername) != 1) {
-        echo "Username does not exist.";
+        echo "Error: Username does not exist.";
         exit();
     }
 
     $queryInfo = mysqli_fetch_assoc($checkUsername);
     $passwordHash = $queryInfo["password"];
+    $userID = $queryInfo["userID"];
 
     if (password_verify($password, $passwordHash)) {
-    	echo "Success.";
+    	echo "$userID";
     } else {
-    	echo "Invalid password.";
+    	echo "Error: Invalid password.";
     	exit();
     }
 ?>
