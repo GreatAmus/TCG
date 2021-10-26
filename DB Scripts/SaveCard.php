@@ -11,22 +11,22 @@
     //Receieve card fields from POST
     //$deckID = $_POST["deckID"];
     $deckID = "";
-    $name = $_POST["name"];
+    $cardName = $_POST["cardName"];
     $description = $_POST["description"];
     //$imagePath = $_POST["imagePath"];
     $imagePath = "";
     $element = $_POST["element"];
     $cost = $_POST["cost"];
-    $isSummon = $_POST["isSummon"];
-    $max = $_POST["max"];
+    $summon = $_POST["summon"];
+    $cardMax = $_POST["cardMax"];
 
-    if ($isSummon) {
+    if ($summon) {
         $life = $_POST["life"];
         $attack = $_POST["attack"];
         $defense = $_POST["defense"];
 
         //Query database to create new card in cards table
-        $createCardQuery = "INSERT INTO cards (name, description, imagePath, element, cost, isSummon, life, attack, defense, max) VALUES ('" . $name . "', '" . $description . "', '" . $imagePath . "', '" . $element . "', '" . $cost . "', '" . $isSummon . "', '" . $life . "', '" . $attack . "', '" . $defense . "', '" . $max . "');";
+        $createCardQuery = "INSERT INTO cards (cardName, description, imagePath, element, cost, summon, life, attack, defense, cardMax) VALUES ('" . $cardName . "', '" . $description . "', '" . $imagePath . "', '" . $element . "', '" . $cost . "', '" . $summon . "', '" . $life . "', '" . $attack . "', '" . $defense . "', '" . $cardMax . "');";
         mysqli_query($connection, $createCardQuery) or die ("Create card query failed.");
     }
 

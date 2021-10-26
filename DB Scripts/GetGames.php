@@ -12,13 +12,13 @@
     $userID = $_POST["userID"];
 
     //Query database to get games owned by userID
-    $getGamesQuery = "SELECT name, description, imagePath, startingHealth, gameTime FROM games WHERE userID='" . $userID . "';";
+    $getGamesQuery = "SELECT gameName, description, imagePath, startingHealth, timeLimit FROM games WHERE userID='" . $userID . "';";
     $getGames = mysqli_query($connection, $getGamesQuery) or die ("Get games query failed.");
 
     $array = array();
     while($row = mysqli_fetch_assoc($getGames)) {
         $array[] = $row;
-    }
+    } 
 
     echo json_encode($array);
 
