@@ -18,6 +18,7 @@
     $element = $_POST["element"];
     $cost = $_POST["cost"];
     $isSummon = $_POST["isSummon"];
+    $max = $_POST["max"];
 
     if ($isSummon) {
         $life = $_POST["life"];
@@ -25,7 +26,7 @@
         $defense = $_POST["defense"];
 
         //Query database to create new card in cards table
-        $createCardQuery = "INSERT INTO cards (name, description, imagePath, element, cost, isSummon, life, attack, defense) VALUES ('" . $name . "', '" . $description . "', '" . $imagePath . "', '" . $element . "', '" . $cost . "', '" . $isSummon . "', '" . $life . "', '" . $attack . "', '" . $defense . "');";
+        $createCardQuery = "INSERT INTO cards (name, description, imagePath, element, cost, isSummon, life, attack, defense, max) VALUES ('" . $name . "', '" . $description . "', '" . $imagePath . "', '" . $element . "', '" . $cost . "', '" . $isSummon . "', '" . $life . "', '" . $attack . "', '" . $defense . "', '" . $max . "');";
         mysqli_query($connection, $createCardQuery) or die ("Create card query failed.");
     }
 
