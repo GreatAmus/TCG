@@ -12,7 +12,7 @@
     $userID = $_POST["userID"];
 
     //Query database to get games owned by userID
-    $getCardsQuery = "SELECT cardName, description, summon, elementString, cost, life, attack, defense, cardMax FROM cards;";
+    $getCardsQuery = "SELECT cardName, description, summon, elementString, cost, life, attack, defense, cardMax, spellValue, spellType FROM cards;";
     $getCards = mysqli_query($connection, $getCardsQuery) or die ("Get cards query failed.");
 
     $array = array();
