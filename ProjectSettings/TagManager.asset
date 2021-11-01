@@ -3,7 +3,20 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - CardCount
+  - CardPanel
+  - DeckSize
+  - CardCount1
+  - CardCount2
+  - CardCount3
+  - CardCount4
+  - CardCount5
+  - CardCount6
+  - CardCount8
+  - CardCount9
+  - CardCount0
+  - CardCount7
   layers:
   - Default
   - TransparentFX
@@ -13,8 +26,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - CardPanel
+  - CardDisplay
   - 
   - 
   - 
@@ -40,4 +53,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: CardFrame
+    uniqueID: 3829640335
+    locked: 0
+  - name: New Layer
+    uniqueID: 537962127
     locked: 0
