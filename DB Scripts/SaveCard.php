@@ -102,6 +102,9 @@
                 $spellType,
                 $cardID
             );
+
+            $updateSummonCardQuery->execute();
+            $updateSummonCardQuery->close();
         }
     } else { //The card is a spell
         $life = NULL;
