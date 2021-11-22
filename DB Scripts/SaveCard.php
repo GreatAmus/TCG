@@ -1,4 +1,6 @@
 <?php
+    //Save cards to the database based on given cardID and userID. If card does not exist already it is created, if card exists it is updated.
+
     require('Config.php');
 
     $connection = mysqli_connect($SERVER_NAME, $DB_USERNAME, $DB_PASSWORD, $DB);
@@ -25,29 +27,177 @@
         $attack = $_POST["attack"];
         $defense = $_POST["defense"];
 
-        // If card does not exist in db, insert it
+        $spellValue = NULL;
+        $spellType = NULL;
+
+        // If summon card does not exist in db, insert it
         if ($cardID == -1) {
-            //Query database to create new summon card in cards table
-            $createSummonCardQuery = "INSERT INTO cards (userID, cardName, description, portrait, elementString, cost, summon, life, attack, defense, cardMax) VALUES ('" . $userID . "', '" . $cardName . "', '" . $description . "', '" . $portrait . "', '" . $elementString . "', '" . $cost . "', '" . $summon . "', '" . $life . "', '" . $attack . "', '" . $defense . "', '" . $cardMax . "');";
-            mysqli_query($connection, $createSummonCardQuery) or die ("Create summon card query failed.");
-        } else { //Card already exists in db, update it
-            $updateSummonCardQuery = "UPDATE cards SET cardName = '$cardName', description = '$description', portrait = '$portrait', elementString = '$elementString', cost = '$cost', summon = '$summon', life = '$life', attack = '$attack', defense = '$defense', cardMax = '$cardMax', spellValue = NULL, spellType = NULL WHERE cardID = '$cardID';";
-            mysqli_query($connection, $updateSummonCardQuery) or die (mysqli_error($connection));
+            $createSummonCardQuery = $connection->prepare(
+                "INSERT INTO cards (
+                    userID,
+                    cardName,
+                    description,
+                    portrait,
+                    elementString,
+                    cost,
+                    summon,
+                    life,
+                    attack,
+                    defense,
+                    cardMax)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+
+            $createSummonCardQuery->bind_param(
+                "issssiiiiii",
+                $userID,
+                $cardName,
+                $description,
+                $portrait,
+                $elementString,
+                $cost,
+                $summon,
+                $life,
+                $attack,
+                $defense,
+                $cardMax
+            );
+            $createSummonCardQuery->execute();
+            $createSummonCardQuery->close();
+
+            $cardID = getNewestCardID($connection);
+
+
+        } else { //Summon card already exists in db, update it
+            $updateSummonCardQuery = $connection->prepare(
+                "UPDATE cards
+                SET cardName = ?,
+                    description = ?,
+                    portrait = ?,
+                    elementString = ?,
+                    cost = ?,
+                    summon = ?,
+                    life = ?,
+                    attack = ?,
+                    defense = ?,
+                    cardMax = ?,
+                    spellValue = ?,
+                    spellType = ?
+                WHERE cardID = ?"
+            );
+
+            $updateSummonCardQuery->bind_param(
+                "ssssiiiiiiiii",
+                $cardName,
+                $description,
+                $portrait,
+                $elementString,
+                $cost,
+                $summon,
+                $life,
+                $attack,
+                $defense,
+                $cardMax,
+                $spellValue,
+                $spellType,
+                $cardID
+            );
         }
     } else { //The card is a spell
+        $life = NULL;
+        $attack = NULL;
+        $defense = NULL;
         $spellValue = $_POST["spellValue"];
         $spellType = $_POST["spellType"];
 
-        //If card does not exist in db, insert it
+        //If spell card does not exist in db, insert it
         if ($cardID == -1) {
-            //Query database to create new spell card in cards table
-            $createSpellCardQuery = "INSERT INTO cards (userID, cardName, description, portrait, elementString, cost, summon, spellValue, spellType, cardMax) VALUES ('" . $userID . "', '" . $cardName . "', '" . $description . "', '" . $portrait . "', '" . $elementString . "', '" . $cost . "', '" . $summon . "', '" . $spellValue . "', '" . $spellType . "', '" . $cardMax . "');";
-            mysqli_query($connection, $createSpellCardQuery) or die (mysqli_error($connection));
+            $createSpellCardQuery = $connection->prepare(
+                "INSERT INTO cards (
+                    userID,
+                    cardName,
+                    description,
+                    portrait,
+                    elementString,
+                    cost,
+                    summon,
+                    spellValue,
+                    spellType,
+                    cardMax)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+
+            $createSpellCardQuery->bind_param(
+                "issssiiiii",
+                $userID,
+                $cardName,
+                $description,
+                $portrait,
+                $elementString,
+                $cost,
+                $summon,
+                $spellValue,
+                $spellType,
+                $cardMax
+            );
+
+            $createSpellCardQuery->execute();
+            $createSpellCardQuery->close();
+
+            $cardID = getNewestCardID($connection);
+
         } else { //Card already exists in db, update it
-            $updateSpellCardQuery = "UPDATE cards SET cardName = '$cardName', description = '$description', portrait = '$portrait', elementString = '$elementString', cost = '$cost', summon = '$summon', spellValue = '$spellValue', spellType = '$spellType', cardMax = '$cardMax', life = NULL, attack = NULL, defense = NULL WHERE cardID = '$cardID';";
-            mysqli_query($connection, $updateSpellCardQuery) or die (mysqli_error($connection));
+            $updateSpellCardQuery = $connection->prepare(
+                "UPDATE cards
+                SET cardName = ?,
+                    description = ?,
+                    portrait = ?,
+                    elementString = ?,
+                    cost = ?,
+                    summon = ?,
+                    spellValue = ?,
+                    spellType = ?,
+                    cardMax = ?,
+                    life = ?,5
+                    attack = ?,
+                    defense = ?
+                WHERE cardID = ?"
+            );
+
+            $updateSpellCardQuery->bind_param(
+                "ssssiiiiiiiii",
+                $cardName,
+                $description,
+                $portrait,
+                $elementString,
+                $cost,
+                $summon,
+                $spellValue,
+                $spellType,
+                $cardMax,
+                $life,
+                $attack,
+                $defense,
+                $cardID
+            );
+
+            $updateSpellCardQuery->execute();
+            $updateSpellCardQuery->close();
         }
     }
 
-    echo("Success.");
+    echo($cardID);
+
+    mysqli_close($connection);
+
+
+    function getNewestCardID($conn) {
+        //Query database for newly created cardID
+        $getCardIDQuery = $conn->prepare("SELECT MAX(cardID) FROM cards");
+        $getCardIDQuery->execute();
+        $result = $getCardIDQuery->get_result();
+        $getCardIDQuery->close();
+            
+        return ($result->fetch_array()[0]);
+    }
 ?>

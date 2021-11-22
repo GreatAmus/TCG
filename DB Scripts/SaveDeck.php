@@ -12,17 +12,31 @@
 
     //Receieve deck fields from POST
     $userID = $_POST["userID"];
+    $deckID = $_POST["deckID"];
     $name = $_POST["name"];
 
-    //Query database to create new deck in decks table
-    $createDeckQuery = "INSERT INTO decks (userID, name) VALUES ('" . $userID . "', '" . $name . "');";
-    $createDeck = mysqli_query($connection, $createDeckQuery) or die (mysqli_error($connection));
+    if ($deckID == -1) { //Deck does not exist, create a new one.
+        $createDeckQuery = $connection->prepare("INSERT INTO decks (userID, name) VALUES (?, ?)");
+        $createDeckQuery->bind_param("is", $userID, $name);
+        $createDeckQuery->execute();
+        $createDeckQuery->close();
 
-    //Query database for newly created deckID
-    $getDeckIDQuery = "SELECT MAX(deckID) FROM decks;";
-    $getDeckID = mysqli_query($connection, $getDeckIDQuery) or die("Get DeckID query failed.");
+        //Query database for newly created deckID
+        $getDeckIDQuery = $connection->prepare("SELECT MAX(deckID) FROM decks");
+        $getDeckIDQuery->execute();
+        $result = $getDeckIDQuery->get_result();
+        $getDeckIDQuery->close();
 
-    $result = mysqli_fetch_array($getDeckID);
+        $deckID = $result->fetch_array()[0];
 
-    echo "$result[0]";
+    } else { //Deck already exists, update it
+        $updateDeckQuery = $connection->prepare("UPDATE decks SET name = ? WHERE deckID = ?");
+        $updateDeckQuery->bind_param("si", $name, $deckID);
+        $updateDeckQuery->execute();
+        $updateDeckQuery->close();
+    }
+
+    echo("$deckID");
+
+    mysqli_close($connection);
 ?>

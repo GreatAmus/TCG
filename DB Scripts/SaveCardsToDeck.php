@@ -1,5 +1,5 @@
 <?php
-    //Creates a new entry in `cardInDeck` table
+    //Creates a new entry in `cardInDeck` table to assign a card to a deck.
 
     require('Config.php');
 
@@ -15,9 +15,13 @@
     $cardID = $_POST["cardID"];
     $cardCount = $_POST["cardCount"];
 
-    //Query database to create new card/deck association in table
-    $createAssociationQuery = "INSERT INTO cardInDeck (deckID, cardID, cardCount) VALUES ('" . $deckID . "', '" . $cardID . "', '" . $cardCount . "');";
-    $createAssociation = mysqli_query($connection, $createAssociationQuery) or die (mysqli_error($connection));
+    //Save the selected card into the deck
+    $createAssociationQuery = $connection->prepare("INSERT INTO cardInDeck (deckID, cardID, cardCount) VALUES (?, ?, ?)");
+    $createAssociationQuery->bind_param("iii", $deckID, $cardID, $cardCount);
+    $createAssociationQuery->execute();
+    $createAssociationQuery->close();
 
     echo "Success.";
+
+    mysqli_close($connection);
 ?>
