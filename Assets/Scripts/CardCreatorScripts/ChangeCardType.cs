@@ -1,4 +1,7 @@
-// Change the type of card from summon to spell and vice versa
+// Name:    CardCollectors
+// Date:    11/12/2021
+// Description: This class changes a card's display from spell to summon and back again
+// This is called from the CardCreator scene when the summon/spell toggel button is set
 
 using System.Collections;
 using System.Collections.Generic;
@@ -14,11 +17,11 @@ public class ChangeCardType : MonoBehaviour
     public GameObject SpellEnterPanel;
     public GameObject SpellPanel;
 
-
+    // Changes the type of card from a summon to a spell or vice versa
     public void ChangeType()
     {
 
-    bool summonDisplayed;
+        bool summonDisplayed;
         if (summonButtonSelected.isOn)
         {
             summonDisplayed = true;
@@ -29,16 +32,12 @@ public class ChangeCardType : MonoBehaviour
             summonDisplayed = false;
             cardTypeDisplay.sprite = Definitions.spellImage;
         }
+
+        // Show which information is active on the card creator scene
         SummonEnterPanel.SetActive(summonDisplayed);
         SummonPanel.SetActive(summonDisplayed);
         SpellEnterPanel.SetActive(!summonDisplayed);
         SpellPanel.SetActive(!summonDisplayed);
-    }
-
-    void changeDisplay(GameObject img, GameObject info, bool display)
-    {
-        img.SetActive(display);
-        info.SetActive(display);
     }
 
     // Start is called before the first frame update. Load the two card types

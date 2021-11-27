@@ -5,66 +5,115 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+// TODO: Empty deck check when drawing
+
 public class DisplayHand : MonoBehaviour
 {
 
-    public GameObject[] hand = new GameObject[2];
-    private CardCollection cards;
+    public GameObject playerHand;
+    public GameObject enemyHand;
     public GameObject firstSlot;
     public GameObject lastSlot;
+    private GameEngine engine;
     public float scale = 33.0f;
 
     // Start is called before the first frame update
-    // Spaces cards evenly between the first card and last card
-    // Works for any number of cards, but requires first and last card to be 
-    // placed on the board.
-    IEnumerator Start()
+    // First and last spot must be defined
+    public IEnumerator Start()
     {
+
+        if (GameSettings.Instance.player1.playerInfo == null)
+        {
+            GameSettings.Instance.player1.playerInfo = gameObject.AddComponent(typeof(CardObject)) as CardObject;
+            GameSettings.Instance.player2.playerInfo = gameObject.AddComponent(typeof(CardObject)) as CardObject;
+            GameSettings.Instance.player1.playerInfo.data = new CardObjectData();
+            GameSettings.Instance.player2.playerInfo.data = new CardObjectData();
+            GameSettings.Instance.player1.playerInfo.data.life = GameSettings.Instance.startingLife;
+            GameSettings.Instance.player2.playerInfo.data.life = GameSettings.Instance.startingLife;
+            GameSettings.Instance.player1.playerInfo.data.cardName = "Player 1";           // Player 1's deck of CardObjects
+            GameSettings.Instance.player2.playerInfo.data.cardName = "Player 2";           // Player 1's deck of CardObjects
+            GameSettings.Instance.engine = gameObject.AddComponent(typeof(GameEngine)) as GameEngine;
+        }
+
+        if (!GameSettings.Instance.created)
+        {
+            GameSettings.Instance.player1.spellPoints = 5;
+            GameSettings.Instance.player2.spellPoints = 5;
+            GameSettings.Instance.created = true;
+            GameSettings.Instance.gameName = "Demo Game";
+            GameSettings.Instance.elementFactor = 1;
+            GameSettings.Instance.spellPointsTurn = 5;         // Number of spell points gained a turn
+            GameSettings.Instance.startingHandSize = 5;        // Cards in hand at beginning of game
+            GameSettings.Instance.cardsPerTurn = 1;            // Cards drawn from the deck each turn
+            GameSettings.Instance.maxSummons = 6;              // Maximum number of summons in play by 1 player
+            GameSettings.Instance.timeLimit = 10;               // Time before the game ends
+            GameSettings.Instance.turnLimit = 15;               // Max number of turns before the game ends
+            GameSettings.Instance.player1.playerID = 1;
+            GameSettings.Instance.player2.playerID = 2;
+            GameSettings.Instance.player1.spellPoints = 7;
+            GameSettings.Instance.player2.spellPoints = 7;
+            GameSettings.Instance.player1.playerInfo.data.life = 25;
+            GameSettings.Instance.player2.playerInfo.data.life = 23;
+        }
 
         firstSlot = GameObject.Find("FirstSlot");
         lastSlot = GameObject.Find("LastSlot");
-        cards = gameObject.AddComponent<CardCollection>() as CardCollection;
-        yield return StartCoroutine(stubCreateCards());
-        displayHand();
+        yield return StartCoroutine(GameSettings.Instance.engine.createCards(GameSettings.Instance.player1, playerHand));
+        yield return StartCoroutine(GameSettings.Instance.engine.createCards(GameSettings.Instance.player2, enemyHand));
+        GameSettings.Instance.player1.deck.Shuffle();
+        GameSettings.Instance.player2.deck.Shuffle();
+        DrawStartingHand();
     }
 
-    IEnumerator stubCreateCards()
+    public void DrawStartingHand()
     {
-        string cardsJson = "";
-        yield return StartCoroutine(getCardsFromDB(s => cardsJson = s));
-        CardObjectData[] allCardData = JsonHelper.FromJson<CardObjectData>(cardsJson);
-        // Debug.Log(cardsJson);
-
-        CardObject newcard;
-        for (int i = 0; i < allCardData.Length; i++)
+        if (GameSettings.Instance.startingHandSize == 0)
+            GameSettings.Instance.startingHandSize = 5;
+        for (int i = 0; i < GameSettings.Instance.startingHandSize; i++)
         {
-            // Debug.Log(allCardData[i].cardName);
-            newcard = cards.addCard(scale, allCardData[i].summon, allCardData[i], gameObject);
-            // Debug.Log(newcard.data.cardName);
+            GameSettings.Instance.engine.DrawCard(GameSettings.Instance.player1);
+            GameSettings.Instance.engine.DrawCard(GameSettings.Instance.player2);
         }
+        SpaceAndDisplayHand();
     }
 
-    public void displayHand()
+
+
+
+    // Update spacing so cards are equidistant in the hand
+    public void SpaceAndDisplayHand()
+    {
+        FormatHand(GameSettings.Instance.player1);
+        FormatHand(GameSettings.Instance.player2);
+    }
+
+    private void FormatHand(Deck player)
     {
         Vector3 firstSlotPos = firstSlot.transform.position;
         Vector3 lastSlotPos = lastSlot.transform.position;
 
-        float xSpacing = (lastSlotPos.x - firstSlotPos.x) / (float)(hand.Length - 1);
-        float ySpacing = 0;
-        float zSpacing = (lastSlotPos.z - firstSlotPos.z) / (float)(hand.Length - 1);
 
-        Vector3 spacing = new Vector3(xSpacing, ySpacing, zSpacing);
-
-        // TODO change index
-        for (int i = 0; i < 6; i++)
+        float xSpacing;
+        Transform parentObject;
+        if (player.playerID == 1) {
+            xSpacing = playerHand.GetComponent<RectTransform>().rect.width / (float)(player.hand.Count + 1);
+            parentObject = playerHand.transform;
+        }
+        else
         {
-            // Debug.Log("test");
-            // Debug.Log(cards.sortedDeck[i].data.cardName);
-            cards.sortedDeck[i].CardDisplay.SetActive(true);
-            hand[i] = cards.sortedDeck[i].CardDisplay;
-            hand[i].transform.position = firstSlotPos + (spacing * i);
+            xSpacing = enemyHand.GetComponent<RectTransform>().rect.width / (float)(player.hand.Count + 1);
+            parentObject = enemyHand.transform;
+        }
+        RectTransform rect = parentObject.GetComponent<RectTransform>();
+        for (int i = 0; i < player.hand.Count; i++)
+        {
+            if (player.hand[i] != null) {
+                player.hand[i].CardDisplay.transform.SetParent(parentObject, false);
+                player.hand[i].CardDisplay.transform.localPosition = new Vector2(175 - rect.rect.width + xSpacing * i, 0); // rect.rect.width/2 -50 + (xSpacing *i),  rect.rect.height/2); //50+(xSpacing * i), ySpacing); 
+            }
         }
     }
+
 
     IEnumerator getCardsFromDB(System.Action<string> json)
     {
@@ -88,7 +137,12 @@ public class DisplayHand : MonoBehaviour
 
     void Update()
     {
-
+        FormatHand(GameSettings.Instance.player1);
+        FormatHand(GameSettings.Instance.player2);
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            GameSettings.Instance.engine.DrawCard(GameSettings.Instance.player1);
+        }
     }
 
 }

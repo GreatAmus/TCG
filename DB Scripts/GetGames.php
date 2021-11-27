@@ -1,6 +1,4 @@
 <?php
-    //Get game template information for given userID. INCOMPLETE.
-
     require('Config.php');
 
     $connection = mysqli_connect($SERVER_NAME, $DB_USERNAME, $DB_PASSWORD, $DB);
@@ -13,33 +11,14 @@
     //Receieve userID field from POST
     $userID = $_POST["userID"];
 
-    $getGamesQuery = $connection->prepare(
-        "SELECT
-            gameID,
-            gameName,
-            spellPointsPerTurn,
-            startingSpellPoints,
-            handSize,
-            maxSize,
-            cardsPerTurn,
-            maxSummons,
-            elementFactor,
-            timeLimit,
-            turnLimit,
-            startingLife
-        FROM games WHERE userID= ?"
-    );
-    
-    $getGamesQuery->bind_param("i", $userID);
-    $getGamesQuery->execute();
-    $result = $getGamesQuery->get_result();
+    //Query database to get games owned by userID
+    $getGamesQuery = "SELECT gameName, description, imagePath, startingHealth, timeLimit FROM games WHERE userID='" . $userID . "';";
+    $getGames = mysqli_query($connection, $getGamesQuery) or die ("Get games query failed.");
 
     $array = array();
-    while($row = $result->fetch_array(MYSQLI_ASSOC)) {
+    while($row = mysqli_fetch_assoc($getGames)) {
         $array[] = $row;
-    }
-
-    $getGamesQuery->close();
+    } 
 
     echo json_encode($array);
 

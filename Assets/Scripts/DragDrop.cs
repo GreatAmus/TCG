@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class DragDrop : MonoBehaviour
 {
+    private GameEngine engine;
     private GameObject PlayArea;
     private bool isDragging = false;
     private bool isOverPlayArea = false;
     private Vector2 startArea;
+    private int cardIndex;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+ //       engine = gameObject.AddComponent(typeof(GameEngine)) as GameEngine;
     }
 
     // Update is called once per frame
@@ -41,10 +44,10 @@ public class DragDrop : MonoBehaviour
         startArea = transform.position;
         isDragging = true;
     }
-    public void stopDragging()
+    public void stopDragging(PointerEventData eventData)
     {
         isDragging = false;
-        if (isOverPlayArea)
+        if (isOverPlayArea )
         {
             transform.SetParent(PlayArea.transform, false);
         }

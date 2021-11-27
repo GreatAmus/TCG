@@ -7,10 +7,16 @@ public class CustomGameData
 {
     public int gameID;
     public string gameName;
-    public string gameDescription;
-    public string imagePath;
-    public int startingHealth;
-    public int gameTime;
+    public int spellPointsPerTurn;
+    public int startingSpellPoints;
+    public int handSize;
+    public int maxSize;
+    public int cardsPerTurn;
+    public int maxSummons;
+    public int elementFactor;
+    public int timeLimit;
+    public int turnLimit;
+    public int startingLife;
 }
 
 public class CustomGame : MonoBehaviour

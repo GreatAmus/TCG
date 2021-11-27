@@ -1,4 +1,7 @@
-// Class used to switch images depending on the type of element used by the card
+// Name:    CardCollectors
+// Date:    11/12/2021
+// Description: Changes the border and logo on the card depending on the card's element.
+// Called in the CardCreator scene when the element drop down is changed
 
 using System.Collections;
 using System.Collections.Generic;
@@ -35,14 +38,4 @@ public class ElementSwitch : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update. Loads the images associated with each element
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

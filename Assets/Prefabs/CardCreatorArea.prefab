@@ -1670,7 +1670,7 @@ GameObject:
   - component: {fileID: 4438443416554442435}
   - component: {fileID: 5738820535231273930}
   - component: {fileID: 8208453149689987150}
-  - component: {fileID: 8025328200736942602}
+  - component: {fileID: 348259763346207415}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -1780,9 +1780,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8025328200736942602}
-        m_TargetAssemblyTypeName: LoadDeckBuilder, Assembly-CSharp
-        m_MethodName: LoadDeckCreator
+      - m_Target: {fileID: 348259763346207415}
+        m_TargetAssemblyTypeName: LoadNewScene, Assembly-CSharp
+        m_MethodName: LoadDeckBuilder
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1792,7 +1792,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &8025328200736942602
+--- !u!114 &348259763346207415
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1801,7 +1801,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6003070624421118228}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b28bfce9742ed1b45894078598184512, type: 3}
+  m_Script: {fileID: 11500000, guid: 74585739f2b1cf34a893587885b04a2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6671735481289379186
@@ -3886,6 +3886,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdbf3fae6b0d0c8449bbf868a703386c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardName: {fileID: 0}
+  maxCards: {fileID: 0}
+  description: {fileID: 0}
+  summons: {fileID: 0}
+  life: {fileID: 0}
+  defense: {fileID: 0}
+  attack: {fileID: 0}
+  cost: {fileID: 0}
+  element: {fileID: 0}
+  spellValue: {fileID: 0}
+  spellType: {fileID: 0}
   portrait: {fileID: 6393142867499784860}
 --- !u!1 &7708684626105590666
 GameObject:

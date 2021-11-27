@@ -1,3 +1,9 @@
+// Name:    CardCollectors
+// Date:    11/12/2021
+// Description: Sets the text on a card as set by the user
+// Called from the CardCreator scene whenever a user changes card text
+// Pretty simple function that just makes sure the card diplay always matches the user input
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

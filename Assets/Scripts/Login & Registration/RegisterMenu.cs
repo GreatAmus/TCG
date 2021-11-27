@@ -50,13 +50,46 @@ public class RegisterMenu : MonoBehaviour
     }
 
     public void ValidateInputs() {
-        errorText.text = "Passwords must match!";
-        errorText.gameObject.SetActive(passwordField.text != confirmPasswordField.text);
+        string username = usernameField.text;
+        string password = passwordField.text;
+        string confirmPassword = confirmPasswordField.text;
+
+        bool passwordsMatch = true;
+        bool fieldsAreNotBlank = true;
+        bool userIsLongEnough = true;
+        bool passIsLongEnough = true;
+
+        errorText.text = "";
+
+        if (password != confirmPassword) {
+            errorText.text = "Passwords must match!";
+            passwordsMatch = false;
+        }
+
+        else if (string.IsNullOrWhiteSpace(username) || string.IsNullOrEmpty(password)) {
+            errorText.text = "Entries must not be blank or only whitespace.";
+            fieldsAreNotBlank = false;
+        }
+
+        else if (username.Length < USERNAME_LENGTH) {
+            errorText.text = "Username must be at least " + USERNAME_LENGTH + " characters.";
+            userIsLongEnough = false;
+        }
+
+        else if (password.Length < PASSWORD_LENGTH) {
+            errorText.text = "Password must be at least " + PASSWORD_LENGTH + " characters.";
+            passIsLongEnough = false;
+        }
+
+        errorText.gameObject.SetActive(!passwordsMatch || !fieldsAreNotBlank || !userIsLongEnough || !passIsLongEnough);
 
         registerButton.interactable = (
-            usernameField.text.Length >= USERNAME_LENGTH
-            && passwordField.text.Length >= PASSWORD_LENGTH
-            && passwordField.text == confirmPasswordField.text);
+            username.Length >= USERNAME_LENGTH
+            && !string.IsNullOrWhiteSpace(username)
+            && password.Length >= PASSWORD_LENGTH
+            && !string.IsNullOrEmpty(password)
+            && password == confirmPassword
+        );
     }
 
     public void GoToLoginScene() {
