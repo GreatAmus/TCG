@@ -13,7 +13,23 @@
     //Receieve userID field from POST
     $userID = $_POST["userID"];
 
-    $getGamesQuery = $connection->prepare("SELECT gameName, startingLife, timeLimit FROM games WHERE userID= ?");
+    $getGamesQuery = $connection->prepare(
+        "SELECT
+            gameID,
+            gameName,
+            spellPointsPerTurn,
+            startingSpellPoints,
+            handSize,
+            maxSize,
+            cardsPerTurn,
+            maxSummons,
+            elementFactor,
+            timeLimit,
+            turnLimit,
+            startingLife
+        FROM games WHERE userID= ?"
+    );
+    
     $getGamesQuery->bind_param("i", $userID);
     $getGamesQuery->execute();
     $result = $getGamesQuery->get_result();
