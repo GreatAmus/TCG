@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class GameEngine : MonoBehaviour
@@ -28,7 +29,7 @@ public class GameEngine : MonoBehaviour
     void Start()
     {
         startTime = DateTime.UtcNow;
-        endTime = startTime.AddMinutes(15.0);
+        endTime = startTime.AddMinutes(GameSettings.Instance.timeLimit);
     }
 
     // Checks for game over conditions. It doesn't check to see if the player's deck is empty.
@@ -37,7 +38,9 @@ public class GameEngine : MonoBehaviour
         if (currentTurn > GameSettings.Instance.turnLimit)
             return true;
         else if (System.DateTime.UtcNow > endTime)
+        {
             return true;
+        }
         else if (GameSettings.Instance.player1.playerInfo.data.life < 1)
         {
             winner = 2;
@@ -273,6 +276,9 @@ public class GameEngine : MonoBehaviour
             DrawCard(GameSettings.Instance.player2);
             playerTurn = 2;
             Prompt.allPrompts.displayPromptAccess("Enemy Turn!", 2);
+            // TODO: AI Turn Logic
+            StartCoroutine(AITurn.AITurnEngine.doAITurn());
+            
         }
         else
         {
@@ -289,6 +295,7 @@ public class GameEngine : MonoBehaviour
         GameOver();
     }
 
+
     private void resetPlayedStatus(List<CardObject> cards)
     {
         foreach (CardObject c in cards)
@@ -298,7 +305,6 @@ public class GameEngine : MonoBehaviour
         }
 
     }
-
 
     void Update()
     {
@@ -317,7 +323,12 @@ public class GameEngine : MonoBehaviour
             }
             
             gameOver = true;
+            StartCoroutine(loadHome());
         }
     }
 
+    IEnumerator loadHome() {
+        yield return new WaitForSecondsRealtime(2);
+        SceneManager.LoadScene("Home");
+    }
 }

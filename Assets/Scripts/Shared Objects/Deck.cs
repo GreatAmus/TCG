@@ -37,10 +37,10 @@ public class Deck
     public void buildDeck(float scale, CardObjectData data, GameObject parent)
     {
         // Add cards for now. This needs to be fixed so it adds deck cards
-//        for (int i = 0; i < data.cardCount; i++)
- //       {
+        for (int i = 0; i < data.cardCount; i++)
+        {
             deck.Add(addCard(scale, data, parent));
- //       }
+        }
     }
 
     // Add a new card to the deck. The parent determines the object holding the card.

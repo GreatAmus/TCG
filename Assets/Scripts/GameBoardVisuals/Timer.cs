@@ -16,22 +16,23 @@ public class Timer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameTime = 15 * 60;
+        gameTime = GameSettings.Instance.timeLimit * 60;
     }
 
     // Update is called once per frame
     void Update()
     {
         gameTime -= Time.deltaTime;
-        minutes = (int) gameTime / 60;
-        seconds = (int)gameTime % 60;
-        if (seconds < 10)
-        {
-            gameTimeText.text = minutes.ToString() + ":0" + seconds.ToString(); 
-        } else
-        {
-            gameTimeText.text = minutes.ToString() + ":" + seconds.ToString();
+        if (gameTime > 0) {
+            minutes = (int) gameTime / 60;
+            seconds = (int)gameTime % 60;
+            if (seconds < 10)
+            {
+                gameTimeText.text = minutes.ToString() + ":0" + seconds.ToString(); 
+            } else
+            {
+                gameTimeText.text = minutes.ToString() + ":" + seconds.ToString();
+            }
         }
-        
     }
 }

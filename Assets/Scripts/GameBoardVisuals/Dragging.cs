@@ -269,7 +269,7 @@ public class Dragging : MonoBehaviour
     }
 
     // Play a summons to the table
-    private void playSummons(CardObject currentCard, GameObject area, Deck player)  
+    public void playSummons(CardObject currentCard, GameObject area, Deck player)  
     {
         if (currentCard.data.cost <= player.spellPoints && player.table.Count < GameSettings.Instance.maxSummons)
         {

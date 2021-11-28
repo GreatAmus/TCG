@@ -4204,8 +4204,8 @@ MonoBehaviour:
   spellPointsPerTurn: {fileID: 1020028155}
   startingSpellPoints: {fileID: 1930244561}
   handSize: {fileID: 1035852006}
-  maxSize: {fileID: 1716416562}
-  cardsPerTurn: {fileID: 157326855}
+  maxSize: {fileID: 157326855}
+  cardsPerTurn: {fileID: 1716416562}
   maxSummons: {fileID: 778021714}
   elementFactor: {fileID: 146289105}
   timeLimit: {fileID: 1821289000}
@@ -7826,7 +7826,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Time Limit (min)
+  m_Text: Time Limit (minutes)
 --- !u!222 &1434188359
 CanvasRenderer:
   m_ObjectHideFlags: 0
