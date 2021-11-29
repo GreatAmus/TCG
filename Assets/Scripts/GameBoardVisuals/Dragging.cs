@@ -295,9 +295,12 @@ public class Dragging : MonoBehaviour
         }
     }
 
-    // See if the target should be remvoed from the game
+    // See if the target should be remvoed from the game and update its life
     private void checkTarget(CardObject target, Deck owner, bool targetIsPlayer)
     {
+        Text foundLife = target.CardDisplay.transform.Find("SummonPanel/lblLife").GetComponent<Text>();
+        foundLife.text = target.data.life.ToString();
+
         if (targetIsPlayer || target.data.life > 0)
             return;
 

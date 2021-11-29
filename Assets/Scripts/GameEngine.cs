@@ -57,6 +57,7 @@ public class GameEngine : MonoBehaviour
     // Use one card to attack another. 
     public bool attack(CardObject attacker, CardObject defender) 
     {
+        attacker.data.canAttack = false;
         bool weak = false;
         bool strong = false;
         if (defender.data.cardName == "Player1" || defender.data.cardName == "Player2")
@@ -272,11 +273,19 @@ public class GameEngine : MonoBehaviour
     {
         if (playerTurn == 1)
         {
-            GameSettings.Instance.player2.spellPoints += GameSettings.Instance.spellPointsTurn;
+            if (currentTurn != 0)
+            {
+                GameSettings.Instance.player2.spellPoints += GameSettings.Instance.spellPointsTurn;
+            }
+            
             DrawCard(GameSettings.Instance.player2);
             playerTurn = 2;
             Prompt.allPrompts.displayPromptAccess("Enemy Turn!", 2);
-            // TODO: AI Turn Logic
+            // Ready all units to attack
+            foreach (CardObject card in GameSettings.Instance.player2.table)
+            {
+                card.data.canAttack = true;
+            }
             StartCoroutine(AITurn.AITurnEngine.doAITurn());
             
         }
